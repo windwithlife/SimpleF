@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import './page_wrapper.dart';
 
 class BasePage extends StatelessWidget {
-  void initialize(){
+  void initialize(ModelRegister register){
     
   }
   void goto(BuildContext context,String url){

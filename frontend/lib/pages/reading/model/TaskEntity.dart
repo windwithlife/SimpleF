@@ -1,62 +1,59 @@
 import '../../../store/model/priority.dart';
 import 'package:meta/meta.dart';
 
-class Tasks {
-  static final tblTask = "Tasks";
+class Readings {
+  static final tblTask = "ReadingStore";
   static final dbId = "id";
   static final dbTitle = "title";
   static final dbComment = "comment";
-  static final dbDueDate = "dueDate";
+  static final dbCreatedDate = "createdDate";
   static final dbPriority = "priority";
   static final dbStatus = "status";
   static final dbProjectID = "projectId";
+  static final dbContentText ="contentText";
+  static final dbSourceUrl   = "sourceUrl";
+  static final dbContentType = "isLinked";
+  static final dbTag ="tag";
 
   String title, comment, projectName;
-  int id, dueDate, projectId, projectColor;
+  int id, createdDate, projectId;
   Status priority;
-  TaskStatus tasksStatus;
-  List<String> labelList = List();
+  
 
-  Tasks.create(
+  Readings.create(
       {@required this.title,
       // @required this.projectId,
       this.comment = "",
-      this.dueDate = -1,
+      this.createdDate = -1,
       this.priority = Status.PRIORITY_4}) {
-    if (this.dueDate == -1) {
-      this.dueDate = DateTime.now().millisecondsSinceEpoch;
+    if (this.createdDate == -1) {
+      this.createdDate = DateTime.now().millisecondsSinceEpoch;
     }
-    this.tasksStatus = TaskStatus.PENDING;
+  
   }
 
-  bool operator ==(o) => o is Tasks && o.id == id;
 
-  Tasks.update(
+  Readings.update(
       {@required this.id,
       @required this.title,
       @required this.projectId,
       this.comment = "",
-      this.dueDate =-1,
-      this.priority = Status.PRIORITY_4,
-      this.tasksStatus = TaskStatus.PENDING}) {
-    if (this.dueDate == -1) {
-      this.dueDate = DateTime.now().millisecondsSinceEpoch;
+      this.createdDate =-1,
+      this.priority = Status.PRIORITY_4,}) {
+    if (this.createdDate == -1) {
+      this.createdDate = DateTime.now().millisecondsSinceEpoch;
     }
   }
 
-  Tasks.fromMap(Map<String, dynamic> map)
+  Readings.fromMap(Map<String, dynamic> map)
       : this.update(
           id: map[dbId],
           title: map[dbTitle],
           projectId: map[dbProjectID],
           comment: map[dbComment],
-          dueDate: map[dbDueDate],
+          createdDate: map[dbCreatedDate],
           priority: Status.values[map[dbPriority]],
-          tasksStatus: TaskStatus.values[map[dbStatus]],
+        
         );
-}
-
-enum TaskStatus {
-  PENDING,
-  COMPLETE,
+ 
 }

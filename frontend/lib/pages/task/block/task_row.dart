@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './model/tasks.dart';
-import '../../utils/color_utils.dart';
-import '../../utils/date_util.dart';
-import '../../utils/app_constant.dart';
+import '../model/TaskEntity.dart';
+import '../../../utils/color_utils.dart';
+
+import '../../../utils/app_constant.dart';
 
 class TaskRow extends StatelessWidget {
-  final Tasks tasks;
+  final Task tasks;
   static final date_label = "Date";
   final List<String> labelNames = List();
 

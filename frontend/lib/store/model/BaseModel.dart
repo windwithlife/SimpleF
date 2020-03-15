@@ -3,10 +3,9 @@ import 'package:flutter/foundation.dart' show ChangeNotifier;
 class BaseModel extends ChangeNotifier {
   
   String modelName = "base-model";
+  bool isLoading = false;
  
-  bool hasData() {
-    return false;
-  }
+  
   void refresh(){
     notifyListeners();
   }

@@ -1,21 +1,24 @@
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 
 import '../../../store/model/BaseModel.dart';
-import './tasks.dart';
+import './TaskEntity.dart';
 import './task_db.dart';
+//import './project_db.dart';
+//import './TodoProjectEntity.dart';
+
 
 class TasksModel extends BaseModel {
-  TasksModel._privateConstructor();
-  static final TasksModel instance = TasksModel._privateConstructor();
-  Tasks currentTask = Tasks.create(
+  
+  Task currentTask = Task.create(
         title: "name",
         // dueDate: dueDateSelected,
         // priority: status,
         // projectId: project.id,
       );
-  final TaskDB _taskDB = TaskDB.get();
-  List<Tasks> tasksList = new  List<Tasks>();
   
+
+  final TaskDB _taskDB = TaskDB.get();
+  List<Task> tasksList = new  List<Task>();
   @override
   bool hasData(){
     return true;
@@ -42,13 +45,13 @@ class TasksModel extends BaseModel {
   Future save(){
    
     return _taskDB.updateTask(this.currentTask).then((value){
-      //this.refreshTasksList(0, 0, TaskStatus.PENDING);
+      this.refreshTasksList(0, 0, TaskStatus.PENDING).then((value){this.refresh();});
       });
   }
   void updateStatus(int taskID, TaskStatus status) {
 
     _taskDB.updateTaskStatus(taskID, status).then((value) {
-       this.refreshTasksList(0, 0, TaskStatus.PENDING);//.then((vaue){this.refresh();});
+       this.refreshTasksList(0, 0, TaskStatus.PENDING).then((vaue){this.refresh();});
        //this.refresh();
     });
    
@@ -56,7 +59,7 @@ class TasksModel extends BaseModel {
 
   void delete(int taskID) {
     _taskDB.deleteTask(taskID).then((value) {
-      this.refreshTasksList(0, 0, TaskStatus.PENDING);//.then((vaue){this.refresh();});
+      this.refreshTasksList(0, 0, TaskStatus.PENDING).then((vaue){this.refresh();});
       //this.refresh();
     });
    

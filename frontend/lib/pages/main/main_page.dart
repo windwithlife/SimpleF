@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:hello/store/model/UserModel.dart';
 import '../common/page.dart';
 
-import '../task/Home.dart';
+import '../task/todo_home.dart';
 import './model/MainPageModel.dart';
-import '../task/task_widgets.dart';
+//import '../task/task_widgets.dart';
 import '../home/CategoriesScreen.dart';
+import '../reading/reading_home.dart';
 
 class MainPage extends Page {
-  MainPageModel pageModel = MainPageModel.instance;
+  final MainPageModel pageModel = new MainPageModel();
+
+  
   @override
-  void initialize() {
-    //print('*****************init main page!!!');
+  void initialize(ModelRegister register) {
+     register.registerModel(ChangeNotifierProvider.value(value:this.pageModel));
+
     this.pageModel.pagesList.add(new CategoriesScreen().create());
-    this.pageModel.pagesList.add(new TasksPage().create());
-    this.pageModel.pagesList.add(HomePage());
-    //this.pageData.showAppBar(true);
+    this.pageModel.pagesList.add(TodoHomePage().create());
+    this.pageModel.pagesList.add(ReadingHomePage().create());
+    
+
+    //this.pageModel.pagesList.add(new TasksPage().create()); 
   }
 
   @override
@@ -34,11 +41,11 @@ class MainPage extends Page {
           new BottomNavigationBarItem(
               title: new Text('首页'), icon: Icon(Icons.home)),
           new BottomNavigationBarItem(
-              title: new Text('资讯'), icon: Icon(Icons.info)),
+              title: new Text('备忘'), icon: Icon(Icons.note)),
+          new BottomNavigationBarItem(
+              title: new Text('阅读'), icon: Icon(Icons.info)),
           new BottomNavigationBarItem(
               title: new Text('金融'), icon: Icon(Icons.note)),
-          new BottomNavigationBarItem(
-              title: new Text('记事'), icon: Icon(Icons.note)),
           new BottomNavigationBarItem(
               title: new Text('我的'), icon: Icon(Icons.person)),
         ]);
@@ -47,13 +54,17 @@ class MainPage extends Page {
 
   Widget buildPageBody(BuildContext context) {
     return Store.connect<MainPageModel>(
-        builder: (BuildContext context, MainPageModel data, Widget child) {
-      var currentPage = data.currentPageIndex;
-      print(this.pageModel.pagesList);
+        builder: (BuildContext context, MainPageModel model, Widget child) {
+      var currentPage = model.currentPageIndex;
+      //print(this.pageModel.pagesList);
       print('current page index:${currentPage}');
+      var page = model.pagesList[currentPage];
+      if (page is Page){
+         page.onSwithPage();
+      }
       return IndexedStack(
         index: currentPage,
-        children: this.pageModel.pagesList,
+        children: model.pagesList,
       );
       //return this.pageModel.pagesList[currentPage];
     });
@@ -61,8 +72,7 @@ class MainPage extends Page {
 
   @override
   Widget buildBody(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: this.pageModel, child: this.buildPageBody(context));
+    return this.buildPageBody(context);
     //return new Text('homepage');
   }
 }

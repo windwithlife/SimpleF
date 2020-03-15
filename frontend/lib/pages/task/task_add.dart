@@ -1,51 +1,40 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_app/bloc/bloc_provider.dart';
-// import 'package:flutter_app/models/priority.dart';
-// import 'package:flutter_app/pages/labels/label.dart';
-// import 'package:flutter_app/pages/projects/project.dart';
-// import 'package:flutter_app/pages/tasks/bloc/add_task_bloc.dart';
-// import 'package:flutter_app/utils/app_util.dart';
-// import 'package:flutter_app/utils/color_utils.dart';
-// import 'package:flutter_app/utils/date_util.dart';
+
 import '../common/page.dart';
 import './model/TasksModel.dart';
 
 class AddTaskScreen extends Page {
-  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  //final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
-  TasksModel pageModel = TasksModel.instance;
+  //TasksModel pageModel = TasksModel.instance;
 
   @override
-  void initialize(){
+  void initialize(ModelRegister register){
     print('initialize in tasks-add page!');
-     //this.pageData.showAppBar(true);
-  }
-
-  @override
-  void onConfigPageBeforeShow(BuildContext cxt) {
-    // TODO: implement onConfigPageBeforeShow
-    super.onConfigPageBeforeShow(cxt);
-    this.hasAppBar(true);
+     this.hasAppBar(true);
     this.initTitle('新增任务');
   }
+
+  
   @override
   Widget buildBody(BuildContext context) {
-    if (!pageModel.hasData()) {return Center(child: CircularProgressIndicator(),);}
+    
 
-    return ChangeNotifierProvider.value(
-        value: this.pageModel, child: this._buildTaskScreen(context));
+    return this._buildTaskScreen(context);
   }
 
   
   Widget _buildTaskScreen(BuildContext context) {
     //AddTaskBloc createTaskBloc = BlocProvider.of(context);
+    TasksModel model  = Store.value<TasksModel>(context);
     return Scaffold(
-      key: _scaffoldState,
+      //key: _scaffoldState,
       body: ListView(
         children: <Widget>[
+         
           Form(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -55,7 +44,7 @@ class AddTaskScreen extends Page {
                     return msg;
                   },
                   onSaved: (value) {
-                    this.pageModel.currentTask.title = value;
+                    model.currentTask.title = value;
                   },
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -135,9 +124,10 @@ class AddTaskScreen extends Page {
           onPressed: () {
             if (_formState.currentState.validate()) {
               _formState.currentState.save();
-              this.pageModel.save().then((onValue) {
+              model.save().then((onValue) {
                  //Navigator.pop(context, true);
-                 //Application.router.pop(context);
+                 print('save a task info');
+                 Application.router.pop(context);
                });
             }
           }),

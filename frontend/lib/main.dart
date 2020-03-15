@@ -3,14 +3,8 @@ import 'package:english_words/english_words.dart';
 import 'package:fluro/fluro.dart';
 import './routers/routes.dart';
 import './application.dart';
-import './store/index.dart' show Store;
+import './store/store_helper.dart' show Store;
 import './pages/main/main_page.dart';
-//import './pages/common/page_wrapper.dart';
-
-
-
-
-
 
 void main(){
     Application.router = Router();
@@ -32,13 +26,10 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.orange, primaryColor: const Color(0xFFDE4435)),
         home: Builder(
           builder: (context) {
-            //Store.widgetCtx = context;
             Store.globalCtx = context;
             print('widgetCtx: $context');
             var homePage = MainPage().create();
-          
             return homePage;
-            //return new RandomWords();
           },
         ),
       )

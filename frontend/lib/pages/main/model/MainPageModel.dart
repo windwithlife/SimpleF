@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:flutter/material.dart';
 
 class MainPageModel extends ChangeNotifier {
-  MainPageModel._privateConstructor();
-  static final MainPageModel instance = MainPageModel._privateConstructor();
+  //MainPageModel._privateConstructor();
+  //static final MainPageModel instance = MainPageModel._privateConstructor();
 
   String titleName = "mainPage";
   int currentPageIndex = 0;

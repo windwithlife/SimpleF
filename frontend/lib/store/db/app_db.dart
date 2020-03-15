@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:flutter_app/pages/labels/label.dart';
-//import 'package:flutter_app/pages/projects/project.dart';
-//import 'package:flutter_app/pages/tasks/models/task_labels.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../pages/task/model/tasks.dart';
+import '../../pages/task/model/TaskEntity.dart';
+import '../../pages/task/model/TodoProjectEntity.dart';
+//import '../../pages/task/model/project.dart';
 
 /// This is the singleton database class which handlers all database transactions
 /// All the task raw queries is handle here and return a Future<T> with result
@@ -29,6 +28,7 @@ class AppDatabase {
   /// because initialization of the database (it has to go through the method channel)
   Future<Database> getDb() async {
     if (!didInit) await _init();
+    //await _createProjectTable(_database);
     return _database;
   }
 
@@ -39,21 +39,21 @@ class AppDatabase {
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
-      //await _createProjectTable(db);
+      await _createProjectTable(db);
       await _createTaskTable(db);
       //await _createLabelTable(db);
     }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
-      await db.execute("DROP TABLE ${Tasks.tblTask}");
-      //await db.execute("DROP TABLE ${Project.tblProject}");
+      await db.execute("DROP TABLE ${Task.tblTask}");
+      await db.execute("DROP TABLE ${Project.tblProject}");
       //await db.execute("DROP TABLE ${TaskLabels.tblTaskLabel}");
       //await db.execute("DROP TABLE ${Label.tblLabel}");
-      //await _createProjectTable(db);
+      await _createProjectTable(db);
       await _createTaskTable(db);
       //await _createLabelTable(db);
     });
     didInit = true;
   }
-  /*
+  
   Future _createProjectTable(Database db) {
     return db.transaction((Transaction txn) async {
       txn.execute("CREATE TABLE ${Project.tblProject} ("
@@ -66,6 +66,7 @@ class AppDatabase {
           ' VALUES(1, "Inbox", "Grey", ${Colors.grey.value});');
     });
   }
+  /*
 
   Future _createLabelTable(Database db) {
     return db.transaction((Transaction txn) {
@@ -84,14 +85,14 @@ class AppDatabase {
   }
  */
   Future _createTaskTable(Database db) {
-    return db.execute("CREATE TABLE ${Tasks.tblTask} ("
-        "${Tasks.dbId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "${Tasks.dbTitle} TEXT,"
-        "${Tasks.dbComment} TEXT,"
-        "${Tasks.dbDueDate} LONG,"
-        "${Tasks.dbPriority} LONG,"
-        "${Tasks.dbProjectID} LONG,"
-        "${Tasks.dbStatus} LONG"
+    return db.execute("CREATE TABLE ${Task.tblTask} ("
+        "${Task.dbId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "${Task.dbTitle} TEXT,"
+        "${Task.dbComment} TEXT,"
+        "${Task.dbDueDate} LONG,"
+        "${Task.dbPriority} LONG,"
+        "${Task.dbProjectID} LONG,"
+        "${Task.dbStatus} LONG"
         ")"
     );
  

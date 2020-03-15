@@ -1,8 +1,5 @@
 import '../../../store/db/app_db.dart';
-import './tasks.dart';
-//import 'package:flutter_app/pages/projects/project.dart';
-//import 'package:flutter_app/pages/labels/label.dart';
-//import 'package:flutter_app/pages/tasks/models/task_labels.dart';
+import './TaskEntity.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskDB {
@@ -19,24 +16,24 @@ class TaskDB {
     return _taskDb;
   }
 
-  Future<List<Tasks>> getTasks(
+  Future<List<Task>> getTasks(
       {int startDate = 0, int endDate = 0, TaskStatus taskStatus}) async {
     var db = await _appDatabase.getDb();
     var whereClause = startDate > 0 && endDate > 0
-        ? "WHERE ${Tasks.tblTask}.${Tasks.dbDueDate} BETWEEN $startDate AND $endDate"
+        ? "WHERE ${Task.tblTask}.${Task.dbDueDate} BETWEEN $startDate AND $endDate"
         : "";
 
     if (taskStatus != null) {
       var taskWhereClause =
-          "${Tasks.tblTask}.${Tasks.dbStatus} = ${taskStatus.index}";
+          "${Task.tblTask}.${Task.dbStatus} = ${taskStatus.index}";
       whereClause = whereClause.isEmpty
           ? "WHERE $taskWhereClause"
           : "$whereClause AND $taskWhereClause";
     }
 
     var result = await db.rawQuery(
-        'SELECT ${Tasks.tblTask}.* '
-        'FROM ${Tasks.tblTask} $whereClause ');
+        'SELECT ${Task.tblTask}.* '
+        'FROM ${Task.tblTask} $whereClause ');
         //'SELECT ${Tasks.tblTask}.*,${Project.tblProject}.${Project.dbName},${Project.tblProject}.${Project.dbColorCode},group_concat(${Label.tblLabel}.${Label.dbName}) as labelNames '
         //'FROM ${Tasks.tblTask} LEFT JOIN ${TaskLabels.tblTaskLabel} ON ${TaskLabels.tblTaskLabel}.${TaskLabels.dbTaskId}=${Tasks.tblTask}.${Tasks.dbId} '
         //'LEFT JOIN ${Label.tblLabel} ON ${Label.tblLabel}.${Label.dbId}=${TaskLabels.tblTaskLabel}.${TaskLabels.dbLabelId} '
@@ -45,10 +42,10 @@ class TaskDB {
     return _bindData(result);
   }
 
-  List<Tasks> _bindData(List<Map<String, dynamic>> result) {
-    List<Tasks> tasks = List();
+  List<Task> _bindData(List<Map<String, dynamic>> result) {
+    List<Task> tasks = List();
     for (Map<String, dynamic> item in result) {
-      var myTask = Tasks.fromMap(item);
+      var myTask = Task.fromMap(item);
       //myTask.projectName = item[Project.dbName];
       //myTask.projectColor = item[Project.dbColorCode];
       //var labelComma = item["labelNames"];
@@ -95,7 +92,7 @@ class TaskDB {
     var db = await _appDatabase.getDb();
     await db.transaction((Transaction txn) async {
       await txn.rawDelete(
-          'DELETE FROM ${Tasks.tblTask} WHERE ${Tasks.dbId}=$taskID;');
+          'DELETE FROM ${Task.tblTask} WHERE ${Task.dbId}=$taskID;');
     });
   }
 
@@ -103,16 +100,16 @@ class TaskDB {
     var db = await _appDatabase.getDb();
     await db.transaction((Transaction txn) async {
       await txn.rawQuery(
-          "UPDATE ${Tasks.tblTask} SET ${Tasks.dbStatus} = '${status.index}' WHERE ${Tasks.dbId} = '$taskID'");
+          "UPDATE ${Task.tblTask} SET ${Task.dbStatus} = '${status.index}' WHERE ${Task.dbId} = '$taskID'");
     });
   }
 
   /// Inserts or replaces the task.
-  Future updateTask(Tasks task, {List<int> labelIDs}) async {
+  Future updateTask(Task task, {List<int> labelIDs}) async {
     var db = await _appDatabase.getDb();
     await db.transaction((Transaction txn) async {
       int id = await txn.rawInsert('INSERT OR REPLACE INTO '
-          '${Tasks.tblTask}(${Tasks.dbId},${Tasks.dbTitle},${Tasks.dbProjectID},${Tasks.dbComment},${Tasks.dbDueDate},${Tasks.dbPriority},${Tasks.dbStatus})'
+          '${Task.tblTask}(${Task.dbId},${Task.dbTitle},${Task.dbProjectID},${Task.dbComment},${Task.dbDueDate},${Task.dbPriority},${Task.dbStatus})'
           ' VALUES(${task.id}, "${task.title}", ${task.projectId},"${task.comment}", ${task.dueDate},${task.priority.index},${task.tasksStatus.index})');
       /*if (id > 0 && labelIDs != null && labelIDs.length > 0) {
         labelIDs.forEach((labelId) {

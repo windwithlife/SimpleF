@@ -8,19 +8,16 @@ class HomePage extends Page {
     print('create a now object of HomePage Class');
   }
   @override
-  void initialize(){
+  void initialize(ModelRegister register){
+    register.registerModel(ChangeNotifierProvider.value(value: this.pageModel));
       //this.initExtModel(new HomeModel());
       print('initialize in home page!');
   }
   
-  Widget buildPageBody(BuildContext context){
-     return new Text('homepage');
-  }
 
   @override
   Widget buildBody(BuildContext context){
-    return ChangeNotifierProvider.value(value: this.pageModel,child: this.buildPageBody(context));
-    //return new Text('homepage');
+    return new Text('homepage');
    
   }
   

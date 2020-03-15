@@ -20,13 +20,13 @@ class Store {
   }
 
   static T value<T>(context) {
-    return Provider.of(context);
+    return Provider.of<T>(context);
   }
   static T valueOf<T>() {
     if (null != pageCtx){
-      return Provider.of(pageCtx);
+      return Provider.of<T>(pageCtx,listen: false);
     }else{
-      return Provider.of(globalCtx);
+      return Provider.of(globalCtx,listen: false);
     }
     
   }

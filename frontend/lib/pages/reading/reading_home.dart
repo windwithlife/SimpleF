@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../common/page.dart';
-import './model/categoriesList.dart' as categoriesList;
-//import './blocks/slider_card_block.dart';
+import '../home/model/categoriesList.dart' as categoriesList;
 import '../common/block/swiper_block.dart';
-import './blocks/function_buttons_block.dart';
+import './block/slider_card_block.dart';
 
-class CategoriesScreen extends Page {
+
+class ReadingHomePage extends Page {
   
   @override
   void initialize(ModelRegister register) {
-    // TODO: implement initialize
-    super.initialize(register);
+   
     this.hasAppBar(true);
-    this.initTitle("首页");
+    this.initTitle("阅读频道");
   }
   @override
   Widget buildBody(BuildContext context) {
@@ -41,13 +40,10 @@ class CategoriesScreen extends Page {
       ),
       new Expanded(
         flex:2, 
-        child: FunctionButtonsBlock( categoriesList.list,
-          (path) {
-            print("this path to new page:$path");
-            if (null != path) {
-              Application.router.navigateTo(context, path);
-            }
-          })
+        child: new Text("Coming soon!"),//new ImageSliderCard(itemsList, onJumpTo:(){
+
+        //})
+        
       )]
     )
     );
